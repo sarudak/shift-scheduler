@@ -88,6 +88,27 @@
 
 
 
+(def shift-7to9-recurring
+  {:start-time (date/date-time 2014 9 7 4)
+   :end-time (date/date-time 2014 9 7 5)
+   :recurrence-type :weekly
+   })
+
+(defn recurring [request] (assoc-in request [:request] shift-7to9-recurring ))
+
+(def create-7to9-recurring-shift-response [{:command-type :create-shift
+                                  :shift shift-7to9-recurring}])
+
+
+(fact "When creating recurring shifts if there are overlapping recurring shifts the shift is not created"
+      (create-shift-script (recurring overlapping-recurring-request)) => create-shift-error-response
+      (create-shift-script (recurring recurring-request-different-day)) => create-7to9-recurring-shift-response
+      (create-shift-script (recurring recurring-request-different-time)) => create-7to9-recurring-shift-response)
+
+
+
+
+
 
 
 
