@@ -48,9 +48,15 @@
         agnostic-shifts-on-day-to-check (map date-agnostic-shift shifts-on-day-to-check)]
     (filter #(overlapping? agnostic-shift-to-check %) agnostic-shifts-on-day-to-check)))
 
+(defn get-conflict-checker [shift-to-check]
+  (if (= :weekly (:recurrence-type shift-to-check))
+    recurring-conflicts
+    non-recurring-conflicts))
+
 (defn conflicting-shifts [shift-to-check recurring-shifts overlapping-shifts]
-  (concat (recurring-conflicts shift-to-check recurring-shifts)
-          (non-recurring-conflicts shift-to-check overlapping-shifts)))
+  (let [conflict-checker-against-non-recurring (get-conflict-checker shift-to-check)]
+   (concat (recurring-conflicts shift-to-check recurring-shifts)
+          (conflict-checker-against-non-recurring shift-to-check overlapping-shifts))))
 
 
 

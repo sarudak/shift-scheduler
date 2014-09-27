@@ -105,6 +105,10 @@
       (create-shift-script (recurring recurring-request-different-day)) => create-7to9-recurring-shift-response
       (create-shift-script (recurring recurring-request-different-time)) => create-7to9-recurring-shift-response)
 
+(fact "When creating recurring shifts if there are no overlapping shifts in the future the shift is created"
+      (create-shift-script (recurring no-overlapping-request)) => create-7to9-recurring-shift-response
+      (create-shift-script (recurring  overlapping-request)) => create-shift-error-response)
+
 
 
 
