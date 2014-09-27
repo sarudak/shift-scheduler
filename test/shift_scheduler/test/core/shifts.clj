@@ -59,20 +59,32 @@
    :context {:overlapping-shifts []
              :recurring-shifts [overlapping-recurring-shift]}})
 
-(def non-overlapping-recurring-shift
-  {:start-time (date/date-time 2014 9 14 4 30)
-   :end-time (date/date-time 2014 9 14 5 30)
+(def non-overlapping-recurring-shift-different-day
+  {:start-time (date/date-time 2014 9 15 4 30)
+   :end-time (date/date-time 2014 9 15 5 30)
    :recurrence-type :weekly
    })
 
-(def non-overlapping-recurring-request
+(def non-overlapping-recurring-shift-different-time
+  {:start-time (date/date-time 2014 9 14 6 30)
+   :end-time (date/date-time 2014 9 14 7 30)
+   :recurrence-type :weekly
+   })
+
+(def recurring-request-different-day
   {:request shift-7to9-request
    :context {:overlapping-shifts []
-             :recurring-shifts [overlapping-recurring-shift]}})
+             :recurring-shifts [non-overlapping-recurring-shift-different-day]}})
+
+(def recurring-request-different-time
+  {:request shift-7to9-request
+   :context {:overlapping-shifts []
+             :recurring-shifts [non-overlapping-recurring-shift-different-time]}})
 
 (fact "When creating shifts if there are recurrings shifts that overlap the shift is not created"
       (create-shift-script overlapping-recurring-request) => create-shift-error-response
-      (create-shift-script non-overlapping-recurring-request) => create-7to9-shift-response)
+      (create-shift-script recurring-request-different-day) => create-7to9-shift-response
+      (create-shift-script recurring-request-different-time) => create-7to9-shift-response)
 
 
 

@@ -15,7 +15,6 @@
     (if (empty? (conflicting-shifts  request
                                  (:recurring-shifts context)
                                  (:overlapping-shifts context)))
-
       [{:command-type :create-shift
         :shift request}]
       [{:command-type :error
