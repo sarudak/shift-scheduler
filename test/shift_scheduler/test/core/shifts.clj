@@ -11,8 +11,6 @@
    })
 
 
-(def shift )
-
 (def shift-7to9-request shift-7to9)
 
 (fact "When creating a new shift we need to know about shifts that overlap and all recurring shifts"
@@ -36,7 +34,8 @@
 
 (def overlapping-request
   {:request shift-7to9-request
-   :context {:overlapping-shifts [overlapping-shift]}})
+   :context {:overlapping-shifts [overlapping-shift]
+             :recurring-shifts []}})
 
 (def create-7to9-shift-response [{:command-type :create-shift
                                   :shift shift-7to9}])
@@ -48,11 +47,6 @@
       (create-shift-script no-overlapping-request) => create-7to9-shift-response
       (create-shift-script overlapping-request) => create-shift-error-response)
 
-
-
-
-(fact "When creating shifts if there are overlapping shifts the shift is not created"
-      )
 
 (def overlapping-recurring-shift
   {:start-time (date/date-time 2014 9 14 4 30)

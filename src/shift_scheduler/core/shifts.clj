@@ -1,6 +1,6 @@
 (ns shift-scheduler.core.shifts
+  (:use shift-scheduler.core.shift-overlap)
   (:require [clj-time.core :as date]))
-
 
   (defn create-shift-data [request]
     [{:request-type :shifts
@@ -12,10 +12,13 @@
       :recurrence-type :weekly}])
 
   (defn create-shift-script [{:keys [request context]}]
-    (if (seq (:overlapping-shifts context))
-      [{:command-type :error
-        :message "Cannot create overlapping shifts"}]
+    (if (empty? (conflicting-shifts  request
+                                 (:recurring-shifts context)
+                                 (:overlapping-shifts context)))
+
       [{:command-type :create-shift
-      :shift request}])
+        :shift request}]
+      [{:command-type :error
+        :message "Cannot create overlapping shifts"}])
       )
 
