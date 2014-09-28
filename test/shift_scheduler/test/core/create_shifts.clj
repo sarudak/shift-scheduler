@@ -1,4 +1,4 @@
-(ns shift-scheduler.test.core.shifts
+(ns shift-scheduler.test.core.create-shifts
   (:use midje.sweet shift-scheduler.core.shifts)
   (:require [clj-time.core :as date]))
 
@@ -29,8 +29,7 @@
 (def overlapping-shift
   {:start-time (date/date-time 2014 9 21 4 30)
    :end-time (date/date-time 2014 9 21 5 30)
-   :recurrence-type :none
-   })
+   :recurrence-type :none})
 
 (def overlapping-request
   {:request shift-7to9-request

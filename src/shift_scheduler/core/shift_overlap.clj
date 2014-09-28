@@ -30,6 +30,9 @@
 (defn same-day-of-week? [date-a date-b]
   (= (get-day-of-week date-a) (get-day-of-week date-b)))
 
+(defn shifts-on-same-day-of-week? [shift-a shift-b]
+  (same-day-of-week? (:start-time shift-a) (:start-time shift-b)))
+
 (defn date-agnostic [the-date]
   (date/date-time 2000 1 1
                   (date/hour the-date)
@@ -42,7 +45,7 @@
       (assoc :end-time (date-agnostic (:end-time the-shift)))))
 
 (defn recurring-conflicts [shift-to-check recurring-shifts]
-  (let [shift-on-day-to-check? #(same-day-of-week? (:start-time shift-to-check) (:start-time %))
+  (let [shift-on-day-to-check? (partial shifts-on-same-day-of-week? shift-to-check)
         shifts-on-day-to-check (filter shift-on-day-to-check? recurring-shifts)
         agnostic-shift-to-check (date-agnostic-shift shift-to-check)
         agnostic-shifts-on-day-to-check (map date-agnostic-shift shifts-on-day-to-check)]
