@@ -1,5 +1,5 @@
 (ns shift-scheduler.core.schedule-realization
-  (:use shift-scheduler.core.shift-overlap)
+  (:use shift-scheduler.core.date)
   (:require [clj-time.core :as date]
             [clj-time.predicates :as date-check]))
 
@@ -14,25 +14,10 @@
 
 (defn days-after [start-date] (iterate #(date/plus % (date/days 1)) start-date))
 
-(defn truncate-to-day [a-date]
-  (date/date-time
-   (date/year a-date)
-   (date/month a-date)
-   (date/day a-date)))
-
 (defn days-between [start end]
   (let [before-end? #(date/before? % end)
         days-after-start (days-after (truncate-to-day start))]
   (take-while before-end? days-after-start)))
-
-(defn date-from-a-time-from-b [date-a date-b]
-  (date/date-time
-   (date/year date-a)
-   (date/month date-a)
-   (date/day date-a)
-   (date/hour date-b)
-   (date/minute date-b)
-   (date/second date-b)))
 
 (defn realize-instances [{:keys [start-time end-time]} recurring-shifts]
   (let [days-in-period (days-between start-time end-time)]

@@ -1,14 +1,7 @@
 (ns shift-scheduler.core.shift-overlap
+  (:use shift-scheduler.core.date)
   (:require [clj-time.core :as date]
             [clj-time.predicates :as date-check]))
-
-(def day-map {:monday date-check/monday?
-              :tuesday date-check/tuesday?
-              :wednesday date-check/wednesday?
-              :thursday date-check/thursday?
-              :friday date-check/friday?
-              :saturday date-check/saturday?
-              :sunday date-check/sunday?})
 
 (defn shift-interval [shift]
     (date/interval (:start-time shift) (:end-time shift)))
@@ -21,23 +14,8 @@
 (defn non-recurring-conflicts [shift-to-check overlapping-shifts]
   (filter #(overlapping? shift-to-check %) overlapping-shifts))
 
-(defn get-day-of-week [the-date]
-  (->> day-map
-       (filter #((second %) the-date))
-       (map first)
-       first))
-
-(defn same-day-of-week? [date-a date-b]
-  (= (get-day-of-week date-a) (get-day-of-week date-b)))
-
 (defn shifts-on-same-day-of-week? [shift-a shift-b]
   (same-day-of-week? (:start-time shift-a) (:start-time shift-b)))
-
-(defn date-agnostic [the-date]
-  (date/date-time 2000 1 1
-                  (date/hour the-date)
-                  (date/minute the-date)
-                  (date/second the-date)))
 
 (defn date-agnostic-shift [the-shift]
   (-> the-shift
