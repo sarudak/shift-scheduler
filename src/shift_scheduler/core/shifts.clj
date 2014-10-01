@@ -30,10 +30,11 @@
       :context-id :recurring-shifts
       :recurrence-type :weekly}])
 
-
-  (defn get-shifts-process [{:keys [request context]}]
+  (defn get-shifts-script [{:keys [request context]}]
     [{:return-type :shift-data
      :data (realize-schedule request
                              (:recurring-shifts context)
                              (:non-recurring-shifts context))}])
+
+
 

@@ -32,7 +32,7 @@
 
 
 (fact "When getting shifts non-recurring shifts show up as non-recurring"
-      (get-shifts-process get-shifts-no-recurring-request) => get-shifts-no-recurring-response)
+      (get-shifts-script get-shifts-no-recurring-request) => get-shifts-no-recurring-response)
 
 
 (def recurring-shift-raw
@@ -68,5 +68,5 @@
 
 
 (fact "When getting shifts recurring shifts are included as instances"
-      (get-shifts-process get-shifts-with-recurring-request) => get-shifts-with-recurring-response
-      (get-shifts-process with-recurring-different-day-request) => no-data-response)
+      (get-shifts-script get-shifts-with-recurring-request) => get-shifts-with-recurring-response
+      (get-shifts-script with-recurring-different-day-request) => no-data-response)
