@@ -1,6 +1,5 @@
 (ns shift-scheduler.core.shifts
   (:use shift-scheduler.core.shift-overlap shift-scheduler.core.schedule-realization)
-
   (:require [clj-time.core :as date]))
 
   (defn create-shift-data [request]

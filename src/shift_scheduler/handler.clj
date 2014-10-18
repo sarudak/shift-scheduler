@@ -1,5 +1,4 @@
 (ns shift-scheduler.handler
-  (:use shift-scheduler.control.controller)
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]))

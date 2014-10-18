@@ -1,13 +1,12 @@
 (ns shift-scheduler.control.controller
-
   (:require [shift-scheduler.core.shifts :as shifts]
-            [shift-scheduler.io.io :refer query command]))
+            [shift-scheduler.io.io :refer :all]))
 
 (def request-map
-  :create-shift {:data shifts/create-shift-data
+  {:create-shift {:data shifts/create-shift-data
                  :script shifts/create-shift-script}
-  :get-shifts {:data shifts/get-shifts-data
-               :script shifts/get-shifts-script})
+   :get-shifts {:data shifts/get-shifts-data
+               :script shifts/get-shifts-script}})
 
 
 (defn do-request [request request-type]
