@@ -2,6 +2,7 @@
   (:require [shift-scheduler.io.io :refer [query command]]
             [clojure.java.jdbc :as j]
             [honeysql.core :as sql]
+            [honeysql.helpers :refer [select where from]]
             [clj-time.core :as date]
             [shift-scheduler.core.date :refer [timestamp-to-date date-to-timestamp]]
             [shift-scheduler.io.db-convert :as db-convert]))
@@ -14,8 +15,10 @@
                :password "test"})
 
 (defn query-from [request]
-  (sql/select :*)
-  (sql/from (:request-type request)
+  (->
+  (select :*)
+  (from (:request-type request))
+  (where (db-convert/where-clause (:where request)))
   ))
 
 (defmethod query :shifts [request]
