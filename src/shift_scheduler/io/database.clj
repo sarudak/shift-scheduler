@@ -18,29 +18,17 @@
   (->
   (select :*)
   (from (:request-type request))
-  (where (db-convert/where-clause (:where request)))
-  ))
+  (where (db-convert/where-clause (:where request)))))
 
 (defmethod query :shifts [request]
   (->>
-   (j/query mysql-db [(query-from request)])
+   (query-from request)
+   sql/format
+   (j/query mysql-db)
    (map db-convert/out)))
 
-(j/insert! mysql-db :shifts
-  {:start_time (date-to-timestamp (date/date-time 2014 9 21 4))
-   :end_time (date-to-timestamp (date/date-time 2014 9 21 5))
-   :recurrence_type 0})
+;;(j/insert! mysql-db :shifts
+;;  {:start_time (date-to-timestamp (date/date-time 2014 9 21 4))
+;;   :end_time (date-to-timestamp (date/date-time 2014 9 21 5))
+;;   :recurrence_type 0})
 ;; ({:generated_key 1} {:generated_key 2})
-
-(query {:request-type :shifts})
-
-(def get-shifts-request {:request-type :shifts
-  :context-id :overlapping-shifts
-  :where [:and
-          [:<= :end-time (date/date-time 2014 9 21 4)]
-          [:>= :start-time (date/date-time 2014 9 21 5)]]})
-(def get-recurring-shifts-request {:request-type :shifts
-  :context-id :recurring-shifts
-  :where [:= :recurrence-type :weekly]
-  })
-

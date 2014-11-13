@@ -3,6 +3,8 @@
             [shift-scheduler.core.date :refer [timestamp-to-date date-to-timestamp]]
             [clojure.string :as s]))
 
+(def enums {:recurrence-type {:none 0 :weekly 1}})
+
 (defmulti db-out-convert-value type)
 
 (defmethod db-out-convert-value :default [item] item)
@@ -36,21 +38,39 @@
 (defn out [record]
   (into {} (map db-out-convert-item record)))
 
-(defn where-clause [base] base)
-
-(def where-clause [:and
-          [:<= :end-time (date/date-time 2014 9 21 4)]
-          [:>= :start-time (date/date-time 2014 9 21 5)]
-          [:= :recurrence-type :weekly]])
-
 (defn type-of-first [item _] (type item))
 
-(defmulti walk-replace type-of-first)
+(defn map-enums [enums item]
+  (let [enum-key (second item)
+        applicable-enum (enums enum-key)
+        enum-value (nth item 2)]
+    (if applicable-enum
+      (assoc item 2 (enum-value applicable-enum))
+      item)))
 
-(defmethod walk-replace clojure.lang.Sequential [item replace-map] (map #(walk-replace % replace-map) item))
+(defmulti walk-replace type-of-first)
+(defmethod walk-replace clojure.lang.Sequential [item replace-map]
+  (->> item
+       (map-enums (:enums replace-map))
+       (map #(walk-replace % replace-map))))
+
 (defmethod walk-replace clojure.lang.Keyword [item replace-map] (-to_ item))
 (defmethod walk-replace :default [item replace-map] (db-in-convert-value item))
 
-(walk-replace where-clause {})
+(defn where-clause [base] (walk-replace base {:enums enums}))
 
 
+(def get-shifts-request {:request-type :shifts
+  :context-id :overlapping-shifts
+  :where [:and
+          [:<= :end-time (date/date-time 2014 9 21 4)]
+          [:>= :start-time (date/date-time 2014 9 21 5)]]})
+(def get-recurring-shifts-request {:request-type :shifts
+  :context-id :recurring-shifts
+  :where [:= :recurrence-type :weekly]
+  })
+
+(query-from get-shifts-request)
+(:where get-shifts-request)
+
+(where-clause (:where get-shifts-request))
