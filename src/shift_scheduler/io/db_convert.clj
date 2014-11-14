@@ -6,7 +6,7 @@
 (def enums-in {:recurrence-type {:none 0
                                  :weekly 1}})
 
-(def enums-out {:recurrence-type {0 :none
+(def enums-out {:recurrence_type {0 :none
                                   1 :weekly}})
 
 (defmulti db-out-convert-value type)
@@ -38,11 +38,13 @@
 
 (defn db-out-convert-item [[key value]]
   [(_to- key)
-   (db-out-convert-value (or (get-in enums-out key value) value))])
+   (db-out-convert-value (or (get-in enums-out [key value]) value))])
 
 (defn db-in-convert-item [[key value]]
   [(-to_ key)
-   (db-in-convert-value (or (get-in enums-in key value) value))])
+   (db-in-convert-value (or (get-in enums-in [key value]) value))])
+
+(get-in enums-out [:recurrence-type 0])
 
 (defn out [record]
   (into {} (map db-out-convert-item record)))

@@ -27,26 +27,38 @@
 
 (defmethod command :create-shift [request]
   (j/insert! mysql-db :shifts
-    (:shift (dbconvert/in request))))
+    (db-convert/in (:shift request))))
 
 
-(def shift-7to9
-  {:start-time (date/date-time 2014 9 21 4)
-   :end-time (date/date-time 2014 9 21 5)
-   :recurrence-type :none})
-
-(def create-7to9-shift-response {:command-type :create-shift
-                                  :shift shift-7to9})
-
-(command create-7to9-shift-response)
-;;(j/insert! mysql-db :shifts
-;;  {:start_time (date-to-timestamp (date/date-time 2014 9 21 4))
-;;   :end_time (date-to-timestamp (date/date-time 2014 9 21 5))
-;;   :recurrence_type 0})
-;; ({:generated_key 1} {:generated_key 2})
 
 
-(def request {:request-type :shifts
-      :context-id :non-recurring-shifts
-      :where [:= :recurrence-type :none]})
+;(def get-shifts-request {:request-type :shifts
+;  :context-id :overlapping-shifts
+;  :where [:= :recurrence-type :none]})
+;(def get-recurring-shifts-request {:request-type :shifts
+;  :context-id :recurring-shifts
+;  :where [:= :recurrence-type :weekly]
+;  })
+;
+;
+;
+;
+;(def shift-7to9
+;  {:start-time (date/date-time 2014 9 21 4)
+;   :end-time (date/date-time 2014 9 21 5)
+;   :recurrence-type :none})
+;
+;(def create-7to9-shift-response {:command-type :create-shift
+;                                  :shift shift-7to9})
+;
+;(command create-7to9-shift-response)
+;(j/insert! mysql-db :shifts
+;  {:start_time (date-to-timestamp (date/date-time 2014 9 21 4))
+;   :end_time (date-to-timestamp (date/date-time 2014 9 21 5))
+;   :recurrence_type 0})
+;
+;
+;(def request {:request-type :shifts
+;      :context-id :non-recurring-shifts
+;      :where [:= :recurrence-type :none]})
 
