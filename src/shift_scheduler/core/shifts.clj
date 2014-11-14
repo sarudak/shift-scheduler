@@ -37,3 +37,7 @@
                              (:recurring-shifts context)
                              (:non-recurring-shifts context))}])
 
+  (defn delete-shift-process [{:keys [request]}]
+    [{:command-type :delete-shift
+      :id (:id request)}])
+
