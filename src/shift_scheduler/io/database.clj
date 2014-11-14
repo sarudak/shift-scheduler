@@ -7,8 +7,6 @@
             [shift-scheduler.core.date :refer [timestamp-to-date date-to-timestamp]]
             [shift-scheduler.io.db-convert :as db-convert]))
 
-
-
 (def mysql-db {:subprotocol "mysql"
                :subname "//127.0.0.1:3306/shift_scheduler"
                :user "test"
