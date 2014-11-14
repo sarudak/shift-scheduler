@@ -6,15 +6,6 @@
   {:start-time (date/date-time 2014 9 21)
    :end-time (date/date-time 2014 9 22)})
 
-(fact "When getting shifts retrieve all recurring shifts and non-recurring shifts in the range"
-      (get-shifts-data get-shifts-for-9-21-request) => [{:request-type :shifts
-                                          :context-id :non-recurring-shifts
-                                          :start-time [<= (:end-time get-shifts-for-9-21-request)]
-                                          :end-time [>= (:start get-shifts-for-9-21-request)]}
-                                          {:request-type :shifts
-                                          :context-id :recurring-shifts
-                                          :recurrence-type :weekly}])
-
 (def non-recurring-shift-raw
   {:start-time (date/date-time 2014 9 21 4 30)
    :end-time (date/date-time 2014 9 21 5 30)
@@ -32,7 +23,7 @@
 
 
 (fact "When getting shifts non-recurring shifts show up as non-recurring"
-      (get-shifts-process get-shifts-no-recurring-request) => get-shifts-no-recurring-response)
+      (get-shifts-script get-shifts-no-recurring-request) => get-shifts-no-recurring-response)
 
 
 (def recurring-shift-raw
@@ -68,5 +59,5 @@
 
 
 (fact "When getting shifts recurring shifts are included as instances"
-      (get-shifts-process get-shifts-with-recurring-request) => get-shifts-with-recurring-response
-      (get-shifts-process with-recurring-different-day-request) => no-data-response)
+      (get-shifts-script get-shifts-with-recurring-request) => get-shifts-with-recurring-response
+      (get-shifts-script with-recurring-different-day-request) => no-data-response)

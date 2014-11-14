@@ -1,6 +1,8 @@
 (ns shift-scheduler.core.date
   (:require [clj-time.core :as date]
-            [clj-time.predicates :as date-check]))
+            [clj-time.predicates :as date-check]
+            [clj-time.coerce :as date-convert])
+  (:import java.sql.Timestamp))
 
 (def day-map {:monday date-check/monday?
               :tuesday date-check/tuesday?
@@ -39,3 +41,14 @@
    (date/hour date-b)
    (date/minute date-b)
    (date/second date-b)))
+
+(defn timestamp-to-date [timestamp]
+  (-> timestamp
+      .getTime
+      date-convert/from-long))
+
+(defn date-to-timestamp [a-date]
+  (-> a-date
+      date-convert/to-long
+      Timestamp.))
+
