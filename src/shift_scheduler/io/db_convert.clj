@@ -3,7 +3,11 @@
             [shift-scheduler.core.date :refer [timestamp-to-date date-to-timestamp]]
             [clojure.string :as s]))
 
-(def enums {:recurrence-type {:none 0 :weekly 1}})
+(def enums-in {:recurrence-type {:none 0
+                                 :weekly 1}})
+
+(def enums-out {:recurrence-type {0 :none
+                                  1 :weekly}})
 
 (defmulti db-out-convert-value type)
 
@@ -33,10 +37,18 @@
   (replace-in-keyword a-key \- \_))
 
 (defn db-out-convert-item [[key value]]
-  [(_to- key) (db-out-convert-value value)])
+  [(_to- key)
+   (db-out-convert-value (or (get-in enums-out key value) value))])
+
+(defn db-in-convert-item [[key value]]
+  [(-to_ key)
+   (db-in-convert-value (or (get-in enums-in key value) value))])
 
 (defn out [record]
   (into {} (map db-out-convert-item record)))
+
+(defn in [record]
+  (into {} (map db-in-convert-item record)))
 
 (defn type-of-first [item _] (type item))
 
@@ -57,20 +69,16 @@
 (defmethod walk-replace clojure.lang.Keyword [item replace-map] (-to_ item))
 (defmethod walk-replace :default [item replace-map] (db-in-convert-value item))
 
-(defn where-clause [base] (walk-replace base {:enums enums}))
+(defn where-clause [base] (walk-replace base {:enums enums-in}))
 
 
-(def get-shifts-request {:request-type :shifts
-  :context-id :overlapping-shifts
-  :where [:and
-          [:<= :end-time (date/date-time 2014 9 21 4)]
-          [:>= :start-time (date/date-time 2014 9 21 5)]]})
-(def get-recurring-shifts-request {:request-type :shifts
-  :context-id :recurring-shifts
-  :where [:= :recurrence-type :weekly]
-  })
-
-(query-from get-shifts-request)
-(:where get-shifts-request)
-
-(where-clause (:where get-shifts-request))
+;(def get-shifts-request {:request-type :shifts
+;  :context-id :overlapping-shifts
+;  :where [:and
+;          [:<= :end-time (date/date-time 2014 9 21 4)]
+;          [:>= :start-time (date/date-time 2014 9 21 5)]]})
+;(def get-recurring-shifts-request {:request-type :shifts
+;  :context-id :recurring-shifts
+;  :where [:= :recurrence-type :weekly]
+;  })
+;

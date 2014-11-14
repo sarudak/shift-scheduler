@@ -6,15 +6,6 @@
   {:start-time (date/date-time 2014 9 21)
    :end-time (date/date-time 2014 9 22)})
 
-(fact "When getting shifts retrieve all recurring shifts and non-recurring shifts in the range"
-      (get-shifts-data get-shifts-for-9-21-request) => [{:request-type :shifts
-                                          :context-id :non-recurring-shifts
-                                          :start-time [<= (:end-time get-shifts-for-9-21-request)]
-                                          :end-time [>= (:start get-shifts-for-9-21-request)]}
-                                          {:request-type :shifts
-                                          :context-id :recurring-shifts
-                                          :recurrence-type :weekly}])
-
 (def non-recurring-shift-raw
   {:start-time (date/date-time 2014 9 21 4 30)
    :end-time (date/date-time 2014 9 21 5 30)

@@ -13,14 +13,6 @@
 
 (def shift-7to9-request shift-7to9)
 
-(fact "When creating a new shift we need to know about shifts that overlap and all recurring shifts"
-      (create-shift-data shift-7to9-request) => [{:request-type :shifts
-                                          :context-id :overlapping-shifts
-                                          :start-time [<= (:end-time shift-7to9-request)]
-                                          :end-time [>= (:start shift-7to9-request)]}
-                                          {:request-type :shifts
-                                          :context-id :recurring-shifts
-                                          :recurrence-type :weekly}])
 (def no-overlapping-request
   {:request shift-7to9-request
    :context {:overlapping-shifts []

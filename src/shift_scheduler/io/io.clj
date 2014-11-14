@@ -1,5 +1,13 @@
 (ns shift-scheduler.io.io)
 
-(defmulti query :request-type)
+(def query-route-table
+  {:shifts :database})
 
-(defmulti command :request-type)
+(defn route-query [request]
+  (let [request-type (:request-type request)]
+    (or (request-type query-route-table) request-type)))
+
+(defmulti query route-query)
+
+(defmulti command :command-type)
+
